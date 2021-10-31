@@ -1,0 +1,1 @@
+﻿This file should be replace with a valid certificade named: "SuperCoolNoSQLdbCertificate.pfx"
