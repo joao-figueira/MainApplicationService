@@ -8,9 +8,9 @@ An API that allows users to add comments related with some entity.
 
 Important notes:
 
-1) To run this project you'll need a valid certificate to access my database. Once you have this, it should be placed inside the certificates' folder, and be named as "SuperCoolNoSQLdbCertificate.pfx". If you don't want to follow these steps, you should create your own RavenDB database and replace all RavenSetting (on appsettings.json).
-2) The authentication process is outside the scope of this project (for now). Having this is mind, you should add a "UserId" header on all api requests. It will be processed by a custom middleware, and set a ficticious user to be used by the service.
-3) The main directory contains a file named "OffensiveExpressionsList.txt". Inside this file we can set a list of expressions (separated by ';') which we consider to be offensive and we don't want the users to write on comments.
+1) To run this project you'll need a valid certificate to access my database. Once you have this, it should be placed inside the [certificates' folder](https://github.com/joao-figueira/MainApplicationService/tree/master/MainApplicationService.Api/Certificates), and be named as "SuperCoolNoSQLdbCertificate.pfx". If you don't want to follow these steps, you should create your own RavenDB database and replace all [RavenSettings (on appsettings.json)](https://github.com/joao-figueira/MainApplicationService/blob/master/MainApplicationService.Api/appsettings.json).
+2) The authentication process is outside the scope of this project (for now). Having this is mind, you should add a "UserId" header on all api requests. It will be processed by a [custom middleware](https://github.com/joao-figueira/MainApplicationService/blob/master/MainApplicationService.Api/Middlewares/CurrentUserMiddleware.cs), and set a ficticious user to be used by the service.
+3) The main directory contains a file named ["OffensiveExpressionsList.txt"](https://github.com/joao-figueira/MainApplicationService/blob/master/MainApplicationService.Api/OffensiveExpressionsList.txt). Inside this file we can set a list of expressions (separated by ';') which we consider to be offensive and we don't want the users to write on comments.
 
 How to use this API:
 
