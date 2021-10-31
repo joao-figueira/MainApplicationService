@@ -15,6 +15,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NJsonSchema;
+using NSwag;
+using NSwag.Generation.Processors;
+using NSwag.Generation.Processors.Contexts;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Conventions;
 using Raven.Client.Documents.Session;
@@ -33,6 +37,8 @@ namespace MainApplicationService.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers();
+
             var settings = Configuration.GetSection("RavenSettings").Get<RavenSettings>();
             if (settings == null || string.IsNullOrEmpty(settings.CertificatePath))
             {
@@ -54,6 +60,13 @@ namespace MainApplicationService.Api
             };
 
             store.Initialize();
+
+            services.AddSwaggerDocument(c =>
+            {
+                c.Title = "Service API";
+                c.Version = "1.0";
+                c.OperationProcessors.Add(new AddRequiredAccessKeyHeaderParameterProcess());
+            });
 
             services.AddScoped<IAsyncDocumentSession>(serviceProvider => serviceProvider
                 .GetRequiredService<IDocumentStore>()
@@ -89,6 +102,9 @@ namespace MainApplicationService.Api
                 app.UseExceptionHandler("/Error");
             }
 
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
+
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -103,6 +119,24 @@ namespace MainApplicationService.Api
                 endpoints.MapRazorPages();
             });
 
+        }
+
+        /*
+         * In a real case this would be an authentication token instead of a userId
+         */
+        public class AddRequiredAccessKeyHeaderParameterProcess : IOperationProcessor
+        {
+            public bool Process(OperationProcessorContext context)
+            {
+                context.OperationDescription.Operation.Parameters.Add(new OpenApiParameter
+                {
+                    Name = "UserId",
+                    Kind = OpenApiParameterKind.Header,
+                    Schema = new JsonSchema { Type = JsonObjectType.String },
+                    IsRequired = true
+                });
+                return true;
+            }
         }
     }
 }

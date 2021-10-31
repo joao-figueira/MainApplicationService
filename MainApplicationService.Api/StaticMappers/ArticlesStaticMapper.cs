@@ -14,8 +14,7 @@ namespace MainApplicationService.Api.StaticMappers
             return new()
             {
                 Id = article.Id,
-                Title = article.Title,
-                CreatedOnUtc = article.CreatedOnUtc
+                Title = article.Title
             };
         }
     }

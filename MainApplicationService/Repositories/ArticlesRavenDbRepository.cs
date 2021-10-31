@@ -18,14 +18,18 @@ namespace MainApplicationService.Repositories
             _asyncSession = asyncSession;
         }
 
-        public async Task<IEnumerable<Article>> GetListAsync(int skip, int take, CancellationToken cancellationToken = default)
+        public async Task<(IEnumerable<Article> Results, int TotalCount)> GetListAsync(int skip, int take, CancellationToken cancellationToken = default)
         {
-            return await _asyncSession
+            var results = await _asyncSession
                 .Query<Article>()
-                .OrderByDescending(x => x.CreatedOnUtc)
+                .Statistics(out var stats)
                 .Skip(skip)
                 .Take(take)
                 .ToListAsync(cancellationToken);
+
+            var totalCount = stats.TotalResults;
+
+            return (results, totalCount);
         }
 
         public async Task<Article?> GetByIdAsync(string id, CancellationToken cancellationToken = default)

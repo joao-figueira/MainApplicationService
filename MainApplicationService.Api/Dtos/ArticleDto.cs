@@ -9,11 +9,11 @@ namespace MainApplicationService.Api.Dtos
     {
         public string? Id { get; set; }
         public string? Title { get; set; }
-        public DateTime? CreatedOnUtc { get; set; }
     }
 
     public class ArticlesListDto
     {
         public IEnumerable<ArticleDto>? Results { get; set; }
+        public int? TotalCount { get; set; }
     }
 }

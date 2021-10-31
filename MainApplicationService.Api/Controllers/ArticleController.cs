@@ -24,7 +24,7 @@ namespace MainApplicationService.Api.Controllers
         }
 
         /// <summary>
-        /// Get the list of comments for a specific entity
+        /// Get the list of articles for a specific entity
         /// </summary>
         /// <param name="skip"></param>
         /// <param name="take"></param>
@@ -36,10 +36,11 @@ namespace MainApplicationService.Api.Controllers
         [ProducesResponseType(typeof(IDictionary<string, List<string>>), (int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult> GetListAsync(int skip = 0, int take = 50, CancellationToken cancellationToken = default)
         {
-            var comments = await _articlesRepository.GetListAsync(skip, take, cancellationToken);
+            var (results, totalCount) = await _articlesRepository.GetListAsync(skip, take, cancellationToken);
             return Ok(new ArticlesListDto()
             {
-                Results = comments.Select(c => c.ToArticleDto())
+                Results = results.Select(c => c.ToArticleDto()),
+                TotalCount = totalCount
             });
         }
     }
