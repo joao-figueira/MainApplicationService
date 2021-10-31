@@ -1,7 +1,10 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using MainApplicationService.Entities;
 using MainApplicationService.Interfaces;
+using Raven.Client.Documents;
+using Raven.Client.Documents.Linq;
 using Raven.Client.Documents.Session;
 
 namespace MainApplicationService.Repositories
@@ -13,6 +16,16 @@ namespace MainApplicationService.Repositories
         public ArticlesRavenDbRepository(IAsyncDocumentSession asyncSession)
         {
             _asyncSession = asyncSession;
+        }
+
+        public async Task<IEnumerable<Article>> GetListAsync(int skip, int take, CancellationToken cancellationToken = default)
+        {
+            return await _asyncSession
+                .Query<Article>()
+                .OrderByDescending(x => x.CreatedOnUtc)
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync(cancellationToken);
         }
 
         public async Task<Article?> GetByIdAsync(string id, CancellationToken cancellationToken = default)

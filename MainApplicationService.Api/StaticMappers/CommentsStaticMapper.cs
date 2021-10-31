@@ -3,7 +3,7 @@ using MainApplicationService.Entities;
 
 namespace MainApplicationService.Api.StaticMappers
 {
-    public static class CommentsMapper
+    public static class CommentsStaticMapper
     {
         public static CommentDto ToCommentDto(this Comment comment)
         {
