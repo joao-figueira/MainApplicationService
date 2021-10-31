@@ -1,4 +1,4 @@
-# CommentsAPI_RavenDB
+# Service API built with .NET 5.0 and RavenDB
 
 .NET 5.0 WebAPI with RavenDB 
 
