@@ -79,10 +79,11 @@ namespace MainApplicationService.Api.Controllers
             if (!permissionResult.IsSuccess)
                 return StatusCode((int)HttpStatusCode.Forbidden, permissionResult.ValidationErrors);
 
-            var comments = await _commentsRepository.GetListByParentAsync(entityId, skip, take, onlyNew, cancellationToken);
+            var queryResult = await _commentsRepository.GetListByParentAsync(entityId, skip, take, onlyNew, cancellationToken);
             return Ok(new CommentsListDto()
             {
-                Results = comments.Select(c => c.ToCommentDto())
+                Results = queryResult.Results.Select(c => c.ToCommentDto()),
+                TotalCount = queryResult.TotalCount
             });
         }
 

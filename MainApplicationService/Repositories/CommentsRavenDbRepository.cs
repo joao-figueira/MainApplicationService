@@ -41,8 +41,10 @@ namespace MainApplicationService.Repositories
         }
 
         //ToDo: when getting only new comments, this method is making 2 round trips. Change the queries to avoid it.
-        public async Task<IEnumerable<Comment>> GetListByParentAsync(string parentEntityId, int skip, int take, bool onlyNew = false, CancellationToken cancellationToken = default)
+        public async Task<(IEnumerable<Comment> Results, int TotalCount)> GetListByParentAsync(string parentEntityId, int skip, int take, bool onlyNew = false, CancellationToken cancellationToken = default)
         {
+            List<Comment> results;
+            QueryStatistics stats;
             if (onlyNew && !string.IsNullOrEmpty(_currentUserProvider.CurrentUser?.Id))
             {
                 var entityCommentsReadByUser = await _asyncSession
@@ -50,9 +52,10 @@ namespace MainApplicationService.Repositories
                     .Where(l => l.UserId == _currentUserProvider.CurrentUser.Id && l.ParentEntityId == parentEntityId)
                     .ToListAsync(cancellationToken);
 
-                return await _asyncSession
+                results = await _asyncSession
                     .Advanced
                     .AsyncDocumentQuery<Comment>()
+                    .Statistics(out stats)
                     .WhereEquals("ParentId", parentEntityId)
                     .AndAlso()
                     .Not
@@ -62,13 +65,18 @@ namespace MainApplicationService.Repositories
                     .Take(take)
                     .ToListAsync(cancellationToken);
             }
-            return await _asyncSession
-                .Query<Comment>()
-                .Where(x => x.ParentId == parentEntityId)
-                .OrderByDescending(x => x.CreatedOnUtc)
-                .Skip(skip)
-                .Take(take)
-                .ToListAsync(cancellationToken);
+            else
+            {
+                results = await _asyncSession
+                    .Query<Comment>()
+                    .Statistics(out stats)
+                    .Where(x => x.ParentId == parentEntityId)
+                    .OrderByDescending(x => x.CreatedOnUtc)
+                    .Skip(skip)
+                    .Take(take)
+                    .ToListAsync(cancellationToken);
+            }
+            return (results, stats.TotalResults);
         }
 
         public async Task<Comment> CreateAsync(Comment comment, CancellationToken cancellationToken = default)

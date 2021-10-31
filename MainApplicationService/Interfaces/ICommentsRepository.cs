@@ -10,6 +10,6 @@ namespace MainApplicationService.Interfaces
      */
     public interface ICommentsRepository : IBaseRepository<Comment>
     {
-        public Task<IEnumerable<Comment>> GetListByParentAsync(string parentEntityId, int skip, int take, bool onlyNew = false, CancellationToken cancellationToken = default);
+        public Task<(IEnumerable<Comment> Results, int TotalCount)> GetListByParentAsync(string parentEntityId, int skip, int take, bool onlyNew = false, CancellationToken cancellationToken = default);
     }
 }
