@@ -40,7 +40,7 @@ namespace MainApplicationService.Api.Controllers
         [Route("comments/{commentId}", Name = "GetCommentById")]
         [ProducesResponseType(typeof(CommentDto), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(IDictionary<string, List<string>>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(IDictionary<string, List<string>>), (int)HttpStatusCode.Forbidden)]
         public async Task<ActionResult> GetByIdAsync(string commentId, CancellationToken cancellationToken = default)
         {
             var permissionResult = _commentsService.CheckGetPermissions(commentId);
@@ -67,7 +67,7 @@ namespace MainApplicationService.Api.Controllers
         [Route("entity/{entityId}/comments")]
         [ProducesResponseType(typeof(CommentsListDto), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(IDictionary<string, List<string>>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(IDictionary<string, List<string>>), (int)HttpStatusCode.Forbidden)]
         public async Task<ActionResult> GetListAsync(string entityId, int skip = 0, int take = 50, bool onlyNew = false, CancellationToken cancellationToken = default)
         {
             var parentEntity = await _entityBaseRepository.GetByIdAsync(entityId, cancellationToken);
@@ -98,7 +98,8 @@ namespace MainApplicationService.Api.Controllers
         [Route("entity/{entityId}/comments")]
         [ProducesResponseType(typeof(CommentDto), (int) HttpStatusCode.Created)]
         [ProducesResponseType(typeof(string), (int) HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(IDictionary<string, List<string>>), (int) HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(IDictionary<string, List<string>>), (int) HttpStatusCode.Forbidden)]
+        [ProducesResponseType(typeof(IDictionary<string, List<string>>), (int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult> CreateAsync(string entityId, CommentPostModel postModel, CancellationToken cancellationToken = default)
         {
             var parentEntity = await _entityBaseRepository.GetByIdAsync(entityId, cancellationToken);
@@ -130,7 +131,9 @@ namespace MainApplicationService.Api.Controllers
         [Route("comments/{commentId}")]
         [ProducesResponseType(typeof(CommentDto), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(IDictionary<string, List<string>>), (int)HttpStatusCode.Forbidden)]
         [ProducesResponseType(typeof(IDictionary<string, List<string>>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
         public async Task<ActionResult> UpdateAsync(string commentId, CommentPutModel putModel, CancellationToken cancellationToken = default)
         {
             var permissionResult = _commentsService.CheckUpdatePermissions();
@@ -165,6 +168,8 @@ namespace MainApplicationService.Api.Controllers
         [ProducesResponseType(typeof(CommentDto), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(IDictionary<string, List<string>>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(IDictionary<string, List<string>>), (int)HttpStatusCode.Forbidden)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
         public async Task<ActionResult> DeleteAsync(string commentId, CancellationToken cancellationToken = default)
         {
             var permissionResult = _commentsService.CheckDeletePermissions(commentId);
