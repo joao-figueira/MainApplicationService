@@ -28,14 +28,7 @@ namespace MainApplicationService.Repositories
             var comment = await _asyncSession.LoadAsync<Comment?>(id, cancellationToken);
             if (comment != null)
             {
-                await _asyncSession.StoreAsync(new CommentReadLog()
-                {
-                    Id = string.Empty,
-                    ParentEntityId = comment.ParentId,
-                    CommentId = comment.Id,
-                    UserId = _currentUserProvider.CurrentUser?.Id,
-                    TimestampUtc = DateTime.UtcNow
-                }, cancellationToken);
+                await StoreCommentReadLog(comment, DateTime.UtcNow, cancellationToken);
             }
             return comment;
         }
@@ -76,7 +69,28 @@ namespace MainApplicationService.Repositories
                     .Take(take)
                     .ToListAsync(cancellationToken);
             }
+            await StoreMultipleCommentReadLogs(results, cancellationToken);
             return (results, stats.TotalResults);
+        }
+        private async Task StoreMultipleCommentReadLogs(IEnumerable<Comment> comments, CancellationToken cancellationToken = default)
+        {
+            var timestamp = DateTime.UtcNow;
+            foreach (var comment in comments)
+            {
+                await StoreCommentReadLog(comment, timestamp, cancellationToken);
+            }
+        }
+
+        private async Task StoreCommentReadLog(Comment comment, DateTime timestamp, CancellationToken cancellationToken = default)
+        {
+            await _asyncSession.StoreAsync(new CommentReadLog()
+            {
+                Id = string.Empty,
+                ParentEntityId = comment.ParentId,
+                CommentId = comment.Id,
+                UserId = _currentUserProvider.CurrentUser?.Id,
+                TimestampUtc = timestamp
+            }, cancellationToken);
         }
 
         public async Task<Comment> CreateAsync(Comment comment, CancellationToken cancellationToken = default)

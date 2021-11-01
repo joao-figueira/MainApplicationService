@@ -80,6 +80,7 @@ namespace MainApplicationService.Api.Controllers
                 return StatusCode((int)HttpStatusCode.Forbidden, permissionResult.ValidationErrors);
 
             var (results, totalCount) = await _commentsRepository.GetListByParentAsync(entityId, skip, take, onlyNew, cancellationToken);
+            await _commentsRepository.SaveChangesAsync(cancellationToken);
             return Ok(new CommentsListDto()
             {
                 Results = results.Select(c => c.ToCommentDto()),
