@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MainApplicationService.Entities
+﻿namespace MainApplicationService.Entities
 {
     public class Article : EntityBase
     {

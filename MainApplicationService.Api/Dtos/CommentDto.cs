@@ -6,7 +6,7 @@ namespace MainApplicationService.Api.Dtos
     public class CommentDto
     {
         public string? Id { get; set; }
-        public string? ParentId { get; set; }
+        public string? ParentEntityId { get; set; }
         public string? Text { get; set; }
         public string? CreatedById { get; set; }
         public string? ModifiedById { get; set; }

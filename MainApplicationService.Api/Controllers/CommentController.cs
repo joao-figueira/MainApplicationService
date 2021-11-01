@@ -8,7 +8,6 @@ using MainApplicationService.Api.Mappers;
 using MainApplicationService.Api.StaticMappers;
 using MainApplicationService.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Raven.Client.Exceptions;
 
 namespace MainApplicationService.Api.Controllers
 {
@@ -146,14 +145,11 @@ namespace MainApplicationService.Api.Controllers
             var serviceResult = await _commentsService.UpdateAsync(comment, cancellationToken);
             if (!serviceResult.IsSuccess)
                 return BadRequest(serviceResult.ValidationErrors);
-            
-            try
+
+            var saved = await _commentsRepository.SaveChangesAsync(cancellationToken);
+            if (!saved)
             {
-                await _commentsRepository.SaveChangesAsync(cancellationToken);
-            }
-            catch (ConcurrencyException)
-            {
-                return Conflict("The update could not be completed due to a conflict.");
+                return Conflict("The request could not be completed due to a conflict.");
             }
             return Ok(serviceResult.ResultObject?.ToCommentDto());
         }
@@ -183,13 +179,10 @@ namespace MainApplicationService.Api.Controllers
             if (!serviceResult.IsSuccess)
                 return BadRequest(serviceResult.ValidationErrors);
            
-            try
+            var saved = await _commentsRepository.SaveChangesAsync(cancellationToken);
+            if(!saved)
             {
-                await _commentsRepository.SaveChangesAsync(cancellationToken);
-            }
-            catch (ConcurrencyException)
-            {
-                return Conflict("The update could not be completed due to a conflict.");
+                return Conflict("The request could not be completed due to a conflict.");
             }
             return Ok(commentId);
         }

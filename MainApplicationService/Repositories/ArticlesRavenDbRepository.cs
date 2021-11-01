@@ -6,6 +6,7 @@ using MainApplicationService.Interfaces;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Linq;
 using Raven.Client.Documents.Session;
+using Raven.Client.Exceptions;
 
 namespace MainApplicationService.Repositories
 {
@@ -34,7 +35,10 @@ namespace MainApplicationService.Repositories
 
         public async Task<Article?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
         {
-            return await _asyncSession.LoadAsync<Article?>(id, cancellationToken);
+            return await _asyncSession
+                .Query<Article>()
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync(cancellationToken);
         }
 
         public async Task<Article> CreateAsync(Article article, CancellationToken cancellationToken = default)
@@ -53,9 +57,17 @@ namespace MainApplicationService.Repositories
             throw new System.NotImplementedException();
         }
 
-        public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
+        public async Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            await _asyncSession.SaveChangesAsync(cancellationToken);
+            try
+            {
+                await _asyncSession.SaveChangesAsync(cancellationToken);
+                return true;
+            }
+            catch (ConcurrencyException)
+            {
+                return false;
+            }
         }
     }
 }

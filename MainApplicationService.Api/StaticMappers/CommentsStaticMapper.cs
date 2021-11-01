@@ -10,7 +10,7 @@ namespace MainApplicationService.Api.StaticMappers
             return new()
             {
                 Id = comment.Id,
-                ParentId = comment.ParentId,
+                ParentEntityId = comment.ParentEntityId,
                 Text = comment.Text,
                 CreatedById = comment.CreatedById,
                 CreatedOnUtc = comment.CreatedOnUtc,

@@ -4,4 +4,10 @@
     {
         public string? Id { get; set; }
     }
+
+    public enum EntityType
+    {
+        Comment,
+        Article
+    }
 }

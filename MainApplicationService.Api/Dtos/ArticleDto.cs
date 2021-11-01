@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace MainApplicationService.Api.Dtos
 {
@@ -15,5 +12,10 @@ namespace MainApplicationService.Api.Dtos
     {
         public IEnumerable<ArticleDto>? Results { get; set; }
         public int? TotalCount { get; set; }
+    }
+
+    public class ArticlePostModel
+    {
+        public string? Title { get; set; }
     }
 }

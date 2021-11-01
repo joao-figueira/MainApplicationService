@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -24,7 +23,8 @@ namespace MainApplicationService.Api.Controllers
         }
 
         /// <summary>
-        /// Get the list of articles for a specific entity
+        /// Outside the scope. The focus should be on the CommentController.
+        /// For tests support only. 
         /// </summary>
         /// <param name="skip"></param>
         /// <param name="take"></param>

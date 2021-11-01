@@ -9,7 +9,7 @@ namespace MainApplicationService.Api.Mappers
         {
             return new()
             {
-                ParentId = parentId,
+                ParentEntityId = parentId,
                 Text = postModel.Text
             };
         }

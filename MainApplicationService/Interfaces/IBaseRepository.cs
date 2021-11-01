@@ -12,6 +12,6 @@ namespace MainApplicationService.Interfaces
         Task<T> CreateAsync(T genericObject, CancellationToken cancellationToken = default);
         Task<T> UpdateAsync(T genericObject, CancellationToken cancellationToken = default);
         string? Delete(T genericObject, CancellationToken cancellationToken = default);
-        Task SaveChangesAsync(CancellationToken cancellationToken = default);
+        Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

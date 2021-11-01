@@ -1,0 +1,252 @@
+{
+	"info": {
+		"_postman_id": "c8f992be-8dde-4be9-a565-85bf2f7d118a",
+		"name": "Main App Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET ALL ARTICLES (not in scope)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "UserId",
+						"value": "12345",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://localhost:44347/api/v1/articles",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44347",
+					"path": [
+						"api",
+						"v1",
+						"articles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET ALL ENTITY COMMENTS",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "UserId",
+						"value": "12345",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://localhost:44347/api/v1/entity/172aec0b-d971-40dc-b39a-451cc630039d/comments?skip=0&take=3",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44347",
+					"path": [
+						"api",
+						"v1",
+						"entity",
+						"172aec0b-d971-40dc-b39a-451cc630039d",
+						"comments"
+					],
+					"query": [
+						{
+							"key": "skip",
+							"value": "0"
+						},
+						{
+							"key": "take",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET NEW ENTITY COMMENTS",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "UserId",
+						"value": "1234",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://localhost:44347/api/v1/entity/172aec0b-d971-40dc-b39a-451cc630039d/comments?skip=0&take=2&onlyNew=true",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44347",
+					"path": [
+						"api",
+						"v1",
+						"entity",
+						"172aec0b-d971-40dc-b39a-451cc630039d",
+						"comments"
+					],
+					"query": [
+						{
+							"key": "skip",
+							"value": "0"
+						},
+						{
+							"key": "take",
+							"value": "2"
+						},
+						{
+							"key": "onlyNew",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET COMMENT BY ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "UserId",
+						"value": "12345",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://localhost:44347/api/v1/comments/49e07089-9d41-4fb6-9ad8-fe295da6f84e",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44347",
+					"path": [
+						"api",
+						"v1",
+						"comments",
+						"49e07089-9d41-4fb6-9ad8-fe295da6f84e"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE COMMENT",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "UserId",
+						"value": "4321",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Not so lucky this weekend\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44347/api/v1/entity/b914e33e-5c2c-4114-a683-5e07459878b2/comments",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44347",
+					"path": [
+						"api",
+						"v1",
+						"entity",
+						"b914e33e-5c2c-4114-a683-5e07459878b2",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE COMMENT",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "UserId",
+						"value": "12345",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://localhost:44347/api/v1/comments/fb80cee5-2a55-4a91-8532-bf2815ce451d",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44347",
+					"path": [
+						"api",
+						"v1",
+						"comments",
+						"fb80cee5-2a55-4a91-8532-bf2815ce451d"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UPDATE COMMENT",
+			"request": {
+				"auth": {
+					"type": "bearer"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "UserId",
+						"value": "12345",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Muito bom! UAU!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44347/api/v1/comments/9fe7d487-613e-413d-ba7b-73bdfd47cdec",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44347",
+					"path": [
+						"api",
+						"v1",
+						"comments",
+						"9fe7d487-613e-413d-ba7b-73bdfd47cdec"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -9,6 +9,7 @@ using MainApplicationService.Providers;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Linq;
 using Raven.Client.Documents.Session;
+using Raven.Client.Exceptions;
 
 namespace MainApplicationService.Repositories
 {
@@ -25,7 +26,11 @@ namespace MainApplicationService.Repositories
 
         public async Task<Comment?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
         {
-            var comment = await _asyncSession.LoadAsync<Comment?>(id, cancellationToken);
+            var comment = await _asyncSession
+                .Query<Comment>()
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync(cancellationToken);
+
             if (comment != null)
             {
                 await StoreCommentReadLog(comment, DateTime.UtcNow, cancellationToken);
@@ -49,7 +54,7 @@ namespace MainApplicationService.Repositories
                     .Advanced
                     .AsyncDocumentQuery<Comment>()
                     .Statistics(out stats)
-                    .WhereEquals("ParentId", parentEntityId)
+                    .WhereEquals("ParentEntityId", parentEntityId)
                     .AndAlso()
                     .Not
                     .WhereIn("Id", entityCommentsReadByUser.Select(c => c.CommentId))
@@ -63,7 +68,7 @@ namespace MainApplicationService.Repositories
                 results = await _asyncSession
                     .Query<Comment>()
                     .Statistics(out stats)
-                    .Where(x => x.ParentId == parentEntityId)
+                    .Where(x => x.ParentEntityId == parentEntityId)
                     .OrderByDescending(x => x.CreatedOnUtc)
                     .Skip(skip)
                     .Take(take)
@@ -86,7 +91,7 @@ namespace MainApplicationService.Repositories
             await _asyncSession.StoreAsync(new CommentReadLog()
             {
                 Id = string.Empty,
-                ParentEntityId = comment.ParentId,
+                ParentEntityId = comment.ParentEntityId,
                 CommentId = comment.Id,
                 UserId = _currentUserProvider.CurrentUser?.Id,
                 TimestampUtc = timestamp
@@ -115,9 +120,17 @@ namespace MainApplicationService.Repositories
             return comment.Id;
         }
 
-        public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
+        public async Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            await _asyncSession.SaveChangesAsync(cancellationToken);
+            try
+            {
+                await _asyncSession.SaveChangesAsync(cancellationToken);
+                return true;
+            }
+            catch (ConcurrencyException)
+            {
+                return false;
+            }
         }
     }
 }
