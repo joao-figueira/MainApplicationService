@@ -45,7 +45,7 @@ namespace MainApplicationService.Api
                 throw new InvalidOperationException("Invalid RavenDB Settings");
             }
 
-            var offensiveExpressionsAsString = File.ReadAllText("OffensiveExpressionsList.txt");
+            var offensiveExpressionsAsString = File.ReadAllText("../MainApplicationService/OffensiveExpressionsList.txt");
             OffensiveContentHelper.SetOffensiveExpressions(offensiveExpressionsAsString);
 
             var store = new DocumentStore
